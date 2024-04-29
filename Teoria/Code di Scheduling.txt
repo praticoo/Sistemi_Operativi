@@ -1,0 +1,87 @@
+Entrando nel sistema, ogni processo è inserito in una coda di processi (job queue),
+composta da tutti i processi del sistema. I processi presenti in memoria centrale, che
+sono pronti e nell’attesa d’essere eseguiti, si trovano in una lista detta coda dei processi pronti (ready queue). Questa coda generalmente si memorizza come una lista
+concatenata: un’intestazione della coda dei processi pronti contiene i puntatori al primo e all’ultimo pcB dell’elenco, e ciascun pcB comprende un campo puntatore che
+indica il successivo processo contenuto nella coda dei processi pronti.
+Il sistema operativo ha anche altre code. Quando si assegna la cp
+U a un processo,
+quest’ultimo rimane in esecuzione per un certo tempo e prima o poi termina, viene
+interrotto, oppure si ferma nell’attesa di un evento particolare, come il completamento
+di una richiesta di I/o. Una richiesta di I/o può essere diretta a un dispositivo condiviso, come un disco.
+poiché nel sistema esistono molti processi, il disco può essere
+occupato con una richiesta di I/o di qualche altro processo, quindi il processo deve
+attendere che il disco sia disponibile. L’elenco dei processi che attendono la disponibilità di un particolare dispositivo di I/o si chiama coda del dispositivo; ogni dispositivo ha la propria coda.
+Una comune rappresentazione dello scheduling dei processi è data da un diagramma di accodamento. Sono presenti due tipi di coda: la ready queue e un insieme di code
+di dispositivi. I cerchi rappresentano le risorse che servono le code, le frecce indicano
+il flusso di processi nel sistema.
+Un nuovo processo si colloca inizialmente nella ready queue, dove attende finché non
+è selezionato per essere eseguito (dispatched). Una volta che il processo è assegnato
+alla cpU ed è nella fase d’esecuzione, si può verificare uno dei seguenti eventi:
+• il processo può emettere una richiesta di I/o e quindi essere inserito in una coda di I/o; 
+• il processo può creare un nuovo processo figlio e attenderne la terminazione;
+• il processo può essere rimosso forzatamente dalla cpU a causa di un’interruzione,
+ed essere reinserito nella coda dei processi pronti.
+Nei primi due casi, al completamento della richiesta di I/o o al termine del processo
+figlio, il processo passa dallo stato d’attesa allo stato pronto ed è nuovamente inserito
+nella ready queue. Un processo continua questo ciclo fino al termine della sua esecuzione: a questo punto viene rimosso da tutte le code, e vengono deallocati il suo pcB e le varie risorse.
+
+***
+
+
+Il garbage collector (GC) è un componente del sistema di gestione della memoria di un linguaggio di programmazione che si occupa automaticamente della gestione della memoria allocata dinamicamente. Il suo compito principale è rilevare e liberare la memoria non più utilizzata, ossia il cosiddetto "garbage" (spazzatura) o oggetti non più accessibili, al fine di recuperare la memoria e renderla disponibile per nuovi oggetti.
+
+Il mutex, essendo un semaforo binario, può assumere solo due valori: 0 e 1. Quando il mutex è impostato su 0, indica che la risorsa è bloccata e altri processi devono aspettare. Quando il mutex è impostato su 1, indica che la risorsa è disponibile e un solo processo alla volta può acquisirla.
+
+***
+PROBLEMA DEI CINQUE FILOSOFI 
+Si considerino cinque filosofi che trascorrono la loro esistenza pensando e mangiando. I filosofi condividono un tavolo rotondo circondato da cinque sedie, una per ciascun filosofo. Al centro del tavolo si trova una zuppiera colma di riso, e la tavola è
+apparecchiata con cinque bacchette (in inglese chopstick).
+Quando un filosofo pensa, non interagisce con i colleghi; quando gli viene fame, tenta di prendere le bacchette più vicine: quelle che si trovano tra lui e i commensali alla sua destra e alla sua sinistra. Un filosofo può prendere una bacchetta alla volta e non
+può prendere una bacchetta che si trova già nelle mani di un suo vicino. Quando un
+filosofo affamato tiene in mano due bacchette contemporaneamente, mangia senza
+lasciare le bacchette. Terminato il pasto, le posa e riprende a pensare.
+Il problema dei cinque filosofi è considerato un classico problema di sincronizzazione, non certo per la sua importanza pratica, ma perché rappresenta una vasta classe di problemi di controllo della concorrenza, in particolare i problemi caratterizzati
+dalla necessità di assegnare varie risorse a diversi processi evitando situazioni di stallo e d’attesa indefinita.
+Una semplice soluzione consiste nel rappresentare ogni bacchetta con un semaforo: un filosofo tenta di afferrare ciascuna bacchetta eseguendo un’operazione wait()
+su quel semaforo e la posa eseguendo operazioni signal() sui semafori appropriati.
+Quindi, i dati condivisi sono
+semaphore chopstick[5];
+do {
+wait(chopstick[i]);
+wait(chopstick[(i+1) % 5]);
+. . .
+/* mangia */
+. . .
+signal(chopstick[i]);
+signal(chopstick[(i+1) % 5]);
+. . .
+/* pensa */
+. . .
+} while (true);
+dove tutti gli elementi chopstick sono inizializzati a 1. 
+Questa soluzione garantisce che due vicini non mangino contemporaneamente,
+ma è insufficiente poiché non esclude la possibilità che si abbia una situazione di stallo. Si supponga che tutti e cinque i filosofi abbiano fame contemporaneamente e che
+ciascuno afferri la bacchetta di sinistra; tutti gli elementi di chopstick diventano
+uguali a zero, perciò ogni filosofo che tenta di afferrare la bacchetta di destra entra in stallo. Tali situazioni di stallo possono essere evitate con i seguenti espedienti:
+• solo quattro filosofi possono stare contemporaneamente a tavola;
+• un filosofo può prendere le sue bacchette solo se sono entrambe disponibili
+ (quest’operazione si deve eseguire in una sezione critica);
+• si adotta una soluzione asimmetrica: un filosofo dispari prende prima la bacchetta
+di sinistra e poi quella di destra, invece un filosofo pari prende prima la bacchetta di destra e poi quella di sinistra.
+Si noti tuttavia che qualsiasi soluzione soddisfacente per il problema dei cinque filosofi deve escludere la possibilità di situazioni
+d’attesa indefinita, in altre parole che uno dei filosofi muoia di fame (da qui il termine starvation) – una soluzione immune alle situazioni di stallo non esclude necessariamente la possibilità di situazioni d’attesa indefinita.
+
+Le soluzioni 1 e 2 proposte per il problema dei 5 filosofi non sono corrette perché possono portare alla situazione di starvation, cioè i filosofi potrebbero rimanere bloccati in modo indefinito senza fare progressi. Questo accade perché un filosofo potrebbe prendere una forchetta, ma non essere in grado di prendere l'altra forchetta necessaria per iniziare a mangiare. Ciò può causare un blocco del sistema in cui i filosofi sono bloccati in una condizione di deadlock.
+Nella soluzione 1, ogni filosofo prende prima la forchetta a sinistra e poi la forchetta a destra. Questo può portare a un'interferenza reciproca tra i filosofi se tutti cercano contemporaneamente di prendere la forchetta a sinistra, senza mai riuscirci.
+Nella soluzione 2, viene utilizzato un meccanismo di controllo con rilascio e riprova, in cui un filosofo rilascia le forchette se non può prenderle entrambe e poi riprova più tardi. Tuttavia, questa soluzione può ancora causare il deadlock se tutti i filosofi rilasciano contemporaneamente le forchette e riprovano senza fare progressi.
+Una possibile soluzione è la strategia del "controlla con rilascio e riprova aspettando un tempo random". In questa soluzione, ogni filosofo cerca di acquisire le forchette solo se sono entrambe disponibili. Se una o entrambe le forchette non sono disponibili, il filosofo le rilascia e attende un tempo random prima di riprovare.
+L'aggiunta del ritardo casuale serve a evitare situazioni in cui tutti i filosofi provano a prendere le forchette contemporaneamente, creando una sorta di "lotta" per le risorse. Il ritardo casuale permette di distribuire meglio le richieste delle risorse nel tempo, aumentando le possibilità che un filosofo riesca ad acquisire le forchette.
+Pertanto, non esiste una singola funzione che funzioni sempre per risolvere il problema dei 5 filosofi in tutte le situazioni. La scelta della soluzione dipende dal contesto specifico e dai requisiti del sistema.
+La soluzione 4 per il problema dei 5 filosofi consiste nell'utilizzare un semaforo mutex (o semaforo binario) per garantire l'accesso esclusivo alle forchette condivise. Ogni filosofo deve acquisire il mutex prima di prendere le forchette e rilasciarlo dopo aver terminato.
+L'idea di base è che solo un filosofo alla volta può avere accesso alle forchette. Se il mutex è "libero" (valore 1), il filosofo può acquisirlo e procedere a prendere le forchette. Altrimenti, se il mutex è "occupato" (valore 0), il filosofo si mette in attesa finché non diventa disponibile.
+L'utilizzo del semaforo mutex garantisce che solo un filosofo possa acquisire le forchette alla volta, evitando il deadlock. Tuttavia, questa soluzione non è del tutto efficiente in termini di utilizzo delle risorse del sistema. Ad esempio, se un filosofo tiene acquisito il mutex senza rilasciarlo, gli altri filosofi devono attendere inutilmente.
+
+***
+La CPU è l'unità principale di elaborazione di un computer, mentre il core è una componente all'interno della CPU che gestisce l'esecuzione delle istruzioni.
+Avere più core per CPU (multi-core) offre vantaggi come una maggiore capacità di elaborazione parallela e la possibilità di gestire più thread o processi contemporaneamente. Questo può portare a prestazioni migliorate in applicazioni che possono sfruttare il parallelismo, come il rendering grafico, il calcolo scientifico intensivo o l'esecuzione di numerosi processi simultaneamente.
+D'altra parte, avere più CPU con meno core (multi-CPU) può essere vantaggioso in situazioni in cui è richiesta una maggiore scalabilità orizzontale. Più CPU consentono di distribuire il carico di lavoro su più unità di elaborazione fisiche, il che può essere utile in ambienti ad alta concorrenza o in applicazioni che richiedono l'isolamento dei processi. Tuttavia, in generale, l'utilizzo di più CPU può comportare una maggiore complessità di gestione del sistema e può richiedere una pianificazione più accurata delle risorse.

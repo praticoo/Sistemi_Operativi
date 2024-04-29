@@ -1,0 +1,115 @@
+Il firmware è un tipo di software che è direttamente integrato in un dispositivo hardware.
+Ossia un software specificamente progettato per essere eseguito su un particolare hardware.
+A differenza del software tradizionale, che può essere installato o eseguito su un sistema, il firmware è permanentemente memorizzato all'interno del dispositivo e viene eseguito direttamente da esso.
+È responsabile di fornire funzionalità di base per il funzionamento del dispositivo, come il controllo dell'hardware, la gestione delle comunicazioni e l'interfacciamento con altri componenti.
+In sintesi, il firmware è un tipo di software incorporato nel dispositivo hardware che fornisce funzionalità di base e controllo dell'hardware stesso.
+Il BIOS, è un firmware di basso livello, è responsabile di fornire una serie di funzionalità di base necessarie per l'avvio del computer e la comunicazione tra l'hardware e il sistema operativo.
+
+L'offset rappresenta la distanza tra l'inizio della struttura dati e la posizione specifica del dato desiderato.
+
+L'esecuzione indica il permesso di eseguire o avviare un file eseguibile, come un programma o uno script. Consente agli utenti di avviare l'esecuzione del file, che può comportare l'esecuzione di istruzioni di codice o l'avvio di un'applicazione.
+BIOS : È il primo programma che viene eseguito quando si avvia un computer 
+Hard e Soft link : 
+Con un hard link, stai creando un collegamento fisico tra due o più nomi di file. Tutti gli hard link puntano allo stesso nodo i-node nel sistema di file. Se apporti modifiche a uno dei file tramite uno dei nomi, queste modifiche saranno riflesse in tutti gli altri file collegati.
+Con un soft link (o symbolic link), stai creando un collegamento simbolico a un file o a una directory. Il soft link contiene il percorso del file di destinazione anziché puntare direttamente al nodo i-node come negli hard link. Se apporti modifiche al file di destinazione, il collegamento simbolico continuerà a puntare al percorso originale, anche se il file viene rinominato o spostato. Se il file di destinazione viene eliminato o modificato ecc., il collegamento simbolico diventerà non valido o "rotto".
+Tipo di file System : ci stiamo riferendo al sistema utilizzato per organizzare e gestire i file su un dispositivo di archiviazione, come un disco rigido o un'unità a stato solido. Un file system definisce la struttura, le regole e le procedure per la creazione, l'accesso, la modifica e la cancellazione dei file.
+Allocazione contigua, dimensione che cresce : In un file system con allocazione contigua, se non è disponibile uno spazio contiguo sufficiente per ospitare un file che sta crescendo, può essere necessario spostare il file a una nuova posizione nel disco in modo da creare uno spazio contiguo adeguato per il suo aumento di dimensione. Pertanto, alcuni file system utilizzano tecniche di allocazione dinamica che consentono di gestire l'espansione dei file senza dover necessariamente spostare l'intero file o richiedere uno spazio contiguo.
+
+ALLOCAZIONE A LISTE CONCATENATE CON UNA TABELLA IN MEMORIA
+Una variante importante del metodo di allocazione concatenata consiste nell’uso
+della tabella di allocazione dei file (file allocation table, FAT).
+tale metodo di allocazione dello spazio dei dischi, semplice ma efficiente, era usato nei sistemi operativi MS-doS. Per contenere tale tabella si riserva una sezione del disco all’inizio di ciascun volume; la FAT ha un elemento per ogni blocco del disco ed è indicizzata dal numero di blocco; si usa essenzialmente come una lista concatenata. L’elemento di directory
+contiene il numero del primo blocco del file. L’elemento della tabella indicizzato da quel numero di blocco contiene a sua volta il numero del blocco successivo del file.
+Questa catena continua fino all’ultimo blocco, che ha come elemento della tabella un valore speciale di fine del file. I blocchi inutilizzati sono indicati nella tabella da un valore 0. L’allocazione di un nuovo blocco a un file richiede semplicemente la localizzazione del primo elemento della tabella con valore 0 e la sostituzione del valore
+di fine del file precedente con l’indirizzo del nuovo blocco; lo 0 è quindi sostituito con il valore di fine del file.
+
+File log : file di testo, o binario, utilizzato per registare eventi, azioni o informazioni che si verificano in un sistema o applicazione. Vengono comunemente utilizzati per monitorare e tracciare l'attività di un sistema, consentendo di rivedere e analizzare gli eventi accaduti in un determinato periodo di tempo.
+
+FREE-BEHIND
+La gestione della cache con "free behind" (letteralmente "libera dietro") è una tecnica utilizzata per migliorare l'efficienza della cache di un sistema informatico.
+Quando viene richiesto il caricamento di un dato dalla memoria principale alla cache, viene liberato lo spazio nella cache prima di caricare il nuovo dato. In pratica, si libera il blocco di cache corrispondente al dato che verrà caricato, prima ancora di effettuare il caricamento. Questo consente di ridurre il tempo di accesso alla cache per il dato successivo, in quanto lo spazio è già stato liberato.
+Questa tecnica è particolarmente utile in situazioni in cui vi è una forte località temporale nell'accesso ai dati, ovvero quando i dati che vengono richiesti di recente hanno una maggiore probabilità di essere richiesti di nuovo nel prossimo futuro.
+
+SCRITTURA SINCRONA - ASINCRONA
+Scrittura sincrona: Con la scrittura sincrona, anche chiamata scrittura diretta, i dati vengono scritti sia nella cache che sul disco rigido contemporaneamente. Quando un'operazione di scrittura viene richiesta, il sistema operativo aspetta che i dati siano effettivamente scritti sul disco rigido prima di segnalare l'avvenuta scrittura all'applicazione che ha effettuato la richiesta. In questo modo, la scrittura sincrona garantisce che i dati siano persistenti e sicuri anche in caso di guasto o interruzione di alimentazione. È una modalità di scrittura più lenta rispetto alla scrittura asincrona.
+Scrittura asincrona: Con la scrittura asincrona, anche chiamata scrittura differita o posticipata, i dati vengono scritti solo nella cache inizialmente e poi spostati sul disco rigido in un momento successivo. Quando un'operazione di scrittura viene richiesta, il sistema operativo conferma immediatamente l'avvenuta scrittura all'applicazione senza attendere che i dati siano scritti sul disco rigido. Successivamente, il sistema operativo pianifica le operazioni di scrittura effettive sulla base di criteri di ottimizzazione e disponibilità delle risorse. Questo tipo di scrittura può fornire prestazioni più elevate in termini di velocità di scrittura, poiché i dati vengono accumulati nel buffer della cache e scritti sul disco rigido in modo più efficiente.
+È importante notare che con la scrittura asincrona esiste un certo grado di rischio di perdita dei dati in caso di guasto o interruzione di alimentazione, poiché i dati potrebbero essere presenti solo nella cache e non ancora scritti sul disco rigido. Pertanto, l'utilizzo della scrittura asincrona richiede meccanismi di protezione dei dati, come il journaling o altri metodi di recupero, per garantire l'integrità dei dati anche in situazioni di errore.
+
+RAID 0
+RAID 0, noto anche come striping, è una configurazione di livello RAID che combina più dischi rigidi in un unico volume logico. A differenza di altri livelli RAID, come RAID 1 o RAID 5, RAID 0 non fornisce ridondanza o tolleranza ai guasti. È progettato principalmente per migliorare le prestazioni del sistema attraverso l'aumento della velocità di lettura e scrittura dei dati.
+Nel RAID 0, i dati vengono suddivisi in blocchi di dimensioni uguali, chiamati stripe, che vengono distribuiti tra i diversi dischi del RAID. Ogni disco del RAID contribuisce alla memorizzazione dei dati, con una porzione di dati che viene scritta su ogni disco in parallelo. Questo permette di aumentare significativamente la velocità di trasferimento dei dati, poiché le operazioni di lettura e scrittura possono essere eseguite simultaneamente sui dischi.
+E'importante notare che RAID 0 non fornisce alcuna ridondanza dei dati o protezione contro i guasti. Poiché i dati vengono distribuiti tra più dischi, se uno dei dischi del RAID fallisce, l'intero volume potrebbe diventare inaccessibile o compromesso. Pertanto, se si utilizza RAID 0, è fondamentale eseguire regolarmente il backup dei dati per evitare la perdita irreversibile di informazioni in caso di guasto di un disco.
+
+RAID 2 
+Il RAID 2 è una configurazione specifica del livello RAID che utilizza lo striping a livello di bit insieme a un codice di correzione degli errori (ECC) per fornire ridondanza dei dati e tolleranza ai guasti. Le sue caratteristiche principali sono le seguenti:
+Lavora a livello di parole o byte: i dati vengono suddivisi a livello di parole o byte in unità più piccole chiamate bit. Ogni bit dei dati viene memorizzato su un disco separato. Ad esempio, se abbiamo 4 bit di dati, avremo 4 dischi dedicati a memorizzare questi bit.
+Utilizzo di un codice di correzione degli errori (ECC): Il RAID 2 applica un codice di correzione degli errori per rilevare e correggere gli errori che possono verificarsi durante la lettura dei dati dai dischi. Un esempio di codice di correzione degli errori comunemente utilizzato è il codice di Hamming, che può correggere un singolo bit di errore.
+Buone prestazioni: Grazie allo striping a livello di bit, il RAID 2 può ottenere prestazioni elevate. I dati vengono distribuiti su più dischi in modo parallelo, consentendo un aumento della velocità di lettura e scrittura.
+Ottima tolleranza ai guasti: Il RAID 2 offre un'elevata ridondanza e tolleranza ai guasti. Poiché ogni bit dei dati è memorizzato su un disco separato e viene utilizzato un codice di correzione degli errori, è possibile recuperare i dati in caso di guasto di uno o più dischi.
+Sincronizzazione delle rotazioni dei dischi: Per garantire il corretto funzionamento del RAID 2, è necessario sincronizzare le rotazioni dei dischi. Ciò può richiedere l'uso di un controller RAID dedicato che controlla la sequenza di lettura/scrittura dei dischi per mantenere l'allineamento dei dati.
+
+RAID 4
+RAID 4 è un livello di RAID che utilizza lo striping a livello di blocchi con un disco dedicato per la parità. Qui sono le caratteristiche principali di RAID 4:
+Striping a livello di blocchi: I dati vengono suddivisi in blocchi di dimensioni uguali e distribuiti tra i dischi del RAID. Ogni disco del RAID gestisce il proprio blocco di dati.
+Disco extra per la parità: È presente un disco dedicato che contiene i bit di parità calcolati tramite l'operazione XOR dei blocchi corrispondenti sui dischi dati. La parità viene utilizzata per la ricostruzione dei dati in caso di guasto di un disco.
+Assenza di sincronizzazione: A differenza di RAID 2 e RAID 3, non richiede la sincronizzazione delle rotazioni dei dischi poiché ogni disco lavora in modo indipendente sugli stessi blocchi di dati.
+Ottima tolleranza ai guasti: RAID 4 è in grado di tollerare il guasto di un singolo disco. In caso di fallimento di un disco, i dati possono essere ricostruiti utilizzando i blocchi di parità.
+Aggiornamento lento: Quando si modifica un blocco di dati, è necessario calcolare nuovamente il blocco di parità corrispondente. Questo richiede un'operazione di XOR su tutti i blocchi dati corrispondenti e potrebbe comportare una lentezza nell'aggiornamento dei dati.
+Un'ottimizzazione di RAID 4 è che il nuovo blocco di parità può essere calcolato utilizzando il blocco sovrascritto e il vecchio blocco di parità. Questo evita di dover ricalcolare l'intero set di dati per generare il nuovo blocco di parità, riducendo il carico computazionale durante l'aggiornamento dei dati.
+
+
+***
+Raid di livello 2 
+Il livello 2 è anche noto come organizzazione con codici per
+la correzione degli errori di memoria. Da molto tempo i sistemi di memorizzazione impiegano tecniche di riconoscimento degli errori basate su bit di parità. In
+un sistema di questo tipo, ogni byte di memoria può avere associato un bit di parità che indica se i bit con valore 1 nel byte sono in numero pari (parità = 0) oppure dispari (parità = 1). Se si altera uno dei bit nel byte (un valore 1 diventa 0 o viceversa), la parità del byte cambia e quindi non concorda più con la parità memorizzata. analogamente, se si altera il bit di parità, esso non concorda più con la parità calcolata. In questo modo s’identificano tutti gli errori di un singolo bit nel sistema di memoria. Gli schemi di correzione degli errori memorizzano più bit supplementari e possono ricostruire i dati nel caso di un singolo bit danneggiato.
+La stessa idea alla base degli eCC (error-correcting codes) si può usare immediatamente negli array di dischi eseguendo lo striping dei byte presenti nei dischi. per
+esempio, il primo bit di ogni byte si potrebbe memorizzare nel disco 1, il secondo bit
+nel disco 2, e così via fino alla memorizzazione dell’ottavo bit nel disco 8 e alla memorizzazione dei bit di correzione degli errori in ulteriori dischi. Dove i dischi etichettati con la lettera P contengono i bit di correzione. Se uno dei dischi si guasta, i bit rimanenti del
+byte e i bit di correzione a esso associati si possono leggere dagli altri dischi e usare
+per ricostruire i dati danneggiati. 
+• raid di livello 3. Con il livello 3, o organizzazione con bit di parità intercalati, si migliora l’organizzazione del livello 2 considerando che, a differenza dei sistemi
+di memoria centrale, i controllori dei dischi possono rilevare se un settore è stato letto correttamente, così che un unico bit di parità si può usare sia per individuare
+gli errori sia per correggerli. L’idea è la seguente: se uno dei settori è danneggiato, si conosce esattamente di quale settore si tratta e, per ogni bit nel settore, è possibile determinare se debba avere valore 1 o 0 calcolando la parità dei bit corrispondenti dai settori negli altri dischi. Se la parità dei rimanenti bit è uguale a quella memorizzata, il bit mancante è 0, altrimenti è 1. Il raId di livello 3 è altrettanto valido del livello 2 ma meno costoso in quanto richiede un solo disco supplementare, quindi il raId di livello 2 non è utilizzato nella pratica. 
+Il livello 3 presenta due vantaggi rispetto al livello 1. Il primo vantaggio è che
+si usa un solo disco per la parità dei dati memorizzati in diversi dischi di dati, anziché un disco di mirroring per ciascun disco di dati come nel livello 1. Il secondo vantaggio è che, essendo le letture e le scritture dei byte distribuite su più dischi con uno striping a n vie, la velocità di trasferimento di un singolo blocco è pari a n volte quella dei raId di livello 1. D’altro canto, però, il livello 3 permette meno
+operazioni di I/o al secondo, perché ogni disco è coinvolto da tutte le richieste.
+Un altro problema di prestazioni riguardante il raId di livello 3 (come per tutti
+i livelli raId basati sui bit di parità) è il tempo richiesto dal calcolo e dalla scrittura della parità. Questo tempo aggiuntivo determina operazioni di scrittura significativamente più lente rispetto ad array raId senza parità. Per limitare questo calo di prestazioni, molti array raId dispongono di un controllore capace di gestire il
+calcolo della parità. Questo sposta il carico dovuto al calcolo della parità dalla
+CpU all’array di dischi. L’array ha anche una cache NVram per memorizzare i
+blocchi mentre viene calcolata la parità e per memorizzare transitoriamente le
+scritture dal controllore ai dischi. Questa combinazione può rendere la tecnica
+raId con parità altrettanto veloce di quella senza parità; infatti, un array raId con
+cache e bit di parità può avere prestazioni migliori di un’organizzazione raId senza cache e senza parità.
+• raid di livello 4. Nel livello 4, s’impiega lo striping a livello di blocchi, come nel raId di livello 0 e inoltre
+si tiene un blocco di parità in un disco separato per i blocchi corrispondenti presenti negli altri n dischi. Se uno dei
+dischi si guasta, il blocco di parità si può usare insieme ai blocchi corrispondenti
+degli altri dischi per ripristinare i blocchi nel disco guasto.
+La lettura di un blocco richiede l’accesso a un solo disco, permettendo la gestione di altre richieste da parte di altri dischi. Quindi, la capacità di trasferimento
+dei dati per ciascun accesso è minore, ma gli accessi in lettura possono procedere
+in modo parallelo ottenendo una velocità complessiva di I/o più alta. La capacità
+di trasferimento per la lettura di molti dati è alta, poiché si possono leggere in modo parallelo tutti i dischi e anche le operazioni di scrittura di grandi quantità di
+dati presentano un’alta capacità di trasferimento, poiché i dati e i bit di parità si possono scrivere in parallelo.
+Scritture indipendenti di modesta entità non si possono eseguire in parallelo.
+La scrittura da parte del sistema operativo di una quantità di dati inferiore a un
+blocco richiede la lettura del blocco, la sua modifica, e la scrittura del blocco modificato; anche il blocco di parità deve essere aggiornato. Si parla a questo proposito del ciclo lettura-modifica-scrittura. Una singola richiesta di scrittura comporta pertanto quattro accessi al disco, due in lettura e due in scrittura.
+• raid di livello 5. Il livello 5, differisce dal livello 4 per il fatto che, invece di memorizzare i dati in
+n dischi e la parità in un disco separato, i dati e le informazioni di parità sono distribuite tra gli n + 1 dischi. per ogni blocco, uno dei dischi memorizza la parità
+e gli altri i dati. per esempio, considerando una batteria di cinque dischi, la parità
+per il blocco m-esimo si memorizza nel disco (m mod 5) + 1, mentre i blocchi mesimi degli altri quattro dischi contengono i dati effettivi per quel blocco. Dove i simboli P sono distribuiti su tutti i dischi. Un blocco di parità non può contenere informazioni di parità per blocchi
+che risiedono nello stesso disco, poiché un guasto al disco provocherebbe sia la
+perdita di dati sia la perdita dell’informazione di parità e quindi i dati non sarebbero ripristinabili. Con la distribuzione della parità sui diversi dischi, il raId di
+livello 5 evita un uso intensivo del disco dove risiede la parità, che invece si ha
+con il raId di livello 4. raId 5 è il più comune sistema di parità raId.
+
+****
+Allocazione Contigua:
+In questo tipo di implementazione, i file sono memorizzati in modo contiguo sul disco. Ogni file occupa una regione continua di blocchi di dati. Ciò significa che l'inizio del file e i successivi blocchi di dati sono fisicamente adiacenti sul disco. Questo approccio semplifica l'accesso diretto ai dati, ma può portare a frammentazione del disco se i file vengono eliminati o ridimensionati.
+Liste Concatenate:
+Nell'allocazione basata su liste concatenate, i file sono divisi in blocchi di dati che possono essere sparsi in tutto il disco. Ogni blocco di dati contiene un puntatore al successivo blocco di dati del file. L'ultimo blocco di dati ha un puntatore speciale che indica la fine del file. Questo approccio riduce la frammentazione, ma può comportare un'efficienza inferiore nell'accesso diretto ai dati, poiché richiede di seguire la catena di puntatori per accedere ai blocchi di dati.
+File Allocation Table (FAT):
+La FAT è un tipo di implementazione dei file utilizzata in alcuni sistemi di file, come FAT16 e FAT32. In questo approccio, viene utilizzata una tabella, chiamata File Allocation Table, per tenere traccia dei blocchi di dati assegnati a ciascun file. La tabella contiene una voce per ogni blocco di dati sul disco, indicando se il blocco è allocato o libero e il puntatore al successivo blocco di dati del file. La FAT semplifica la gestione dei file e l'accesso casuale ai dati, ma può soffrire di frammentazione e ha una dimensione limitata in base alla dimensione del disco.
+i-node:
+Gli i-node (index node) sono utilizzati in molti file system moderni, come ext2, ext3, ext4 in Linux. Ogni file ha un i-node associato che contiene i metadati del file, come le autorizzazioni, le informazioni di dimensione, i puntatori ai blocchi di dati e altre informazioni. Gli i-node sono organizzati in una struttura gerarchica e contengono tutte le informazioni necessarie per accedere e gestire il file. Questo approccio consente un accesso rapido e diretto ai metadati e ai dati del file, riducendo la frammentazione.
+

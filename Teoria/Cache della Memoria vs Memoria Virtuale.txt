@@ -1,0 +1,68 @@
+La cache è una memoria veloce e di piccole dimensioni che si trova vicino al processore e viene utilizzata per memorizzare temporaneamente i dati e le istruzioni più frequentemente utilizzati dal processore stesso. L'uso della cache consente di ridurre il tempo di accesso ai dati e di migliorare le prestazioni complessive del sistema, poiché il processore può accedere rapidamente ai dati memorizzati nella cache anziché doverli recuperare dalla memoria principale più lenta. In sostanza, la cache serve a migliorare le prestazioni del sistema rendendo l'accesso ai dati più veloce e efficiente.
+La cache L1 (Level 1) e la cache L2 (Level 2) sono due livelli di memoria cache presenti nei dispositivi elettronici.
+
+La cache L1 è la cache più vicina al processore, essendo molto vicina, ha un tempo di accesso molto basso ed è la più veloce tra le cache presenti nel sistema.
+Memorizza, istruzioni o dati.
+
+La cache L2 è un livello di cache di dimensioni maggiori rispetto alla cache L1 e si trova generalmente tra la cache L1 e la memoria principale. La cache L2 memorizza sia le istruzioni che i dati ed è più grande della cache L1, consentendo di conservare più informazioni in memoria cache. Sebbene la cache L2 abbia un tempo di accesso leggermente più lungo rispetto alla cache L1, risulta comunque più veloce rispetto all'accesso diretto alla memoria principale.
+
+È importante notare che la posizione e la struttura della cache possono variare a seconda dell'architettura del processore e del dispositivo specifico. In alcuni casi, può esserci anche una cache L3 (Level 3) aggiuntiva, che è ancora più grande della cache L2 e si trova ulteriormente distante dal processore.
+
+La cache della memoria virtuale serve a migliorare le prestazioni del sistema, in particolare quando la memoria fisica del computer è limitata. La cache della memoria virtuale funziona come uno spazio di archiviazione temporaneo per i dati che vengono spostati dalla memoria fisica al disco rigido (o ad altri dispositivi di archiviazione) quando la memoria fisica è piena. Quando i dati sono richiesti nuovamente, vengono recuperati dalla cache della memoria virtuale invece di dover essere letti dal disco rigido, il che può essere molto più lento. In questo modo, la cache della memoria virtuale aiuta a ridurre i tempi di accesso ai dati e a migliorare le prestazioni complessive del sistema.
+
+La cache della memoria può essere:
+basata sugli indirizzi fisici:
+
+> non serve invalidarla sul context-switch;
+> caching poco efficace;
+
+basata sugli indirizzi virtuali:
+
+La cache della memoria virtuale basata su indirizzi virtuali non deve essere invalidata quando ci sono cambiamenti nella memoria fisica perché la cache è gestita dal sistema operativo e mantiene una mappatura tra gli indirizzi virtuali e gli indirizzi fisici. Quando un processo scrive dati in una posizione di memoria virtuale, il sistema operativo gestisce automaticamente la sincronizzazione dei dati tra la memoria fisica e la memoria virtuale. In questo modo, la cache della memoria virtuale rimane coerente con la memoria fisica senza la necessità di invalidare la cache.
+
+> servono gli ASID per non invalidarla ogni volta;
+
+Gli ASID (Address Space ID) sono identificatori univoci associati a ogni processo in esecuzione su un sistema operativo. Utilizzando gli ASID, la cache L1 può mantenere le informazioni relative a un processo specifico senza dover essere invalidata ogni volta che il processore passa da un processo all'altro. Ciò consente di ridurre il tempo di accesso ai dati nella cache e migliorare le prestazioni complessive del sistema. In sostanza, l'utilizzo degli ASID consente alla cache L1 di essere più efficiente e di non dover essere ripopolata ad ogni cambio di contesto.
+
+> maggiore efficacia.
+
+cache L1 basata su indirizzi virtuali;
+cache L2 e successive basate su indirizzi fisici.
+
+La cache L1, che è la cache più vicina al processore e con tempi di accesso più rapidi, viene solitamente implementata come una cache basata sugli indirizzi virtuali. Questo permette di ottenere una maggiore efficienza nella cache, in quanto i dati possono essere condivisi tra più processi senza dover invalidare completamente la cache su ogni context-switch. Tuttavia, è necessario utilizzare gli ASID (Address Space Identifier) per associare correttamente i dati ai relativi spazi di indirizzamento virtuali, perché i dati memorizzati nella cache sono direttamente associati agli indirizzi fisici della memoria fisica, e non agli spazi di indirizzamento virtuali dei processi.
+
+Le cache di livello superiore, come la cache L2 e le successive, vengono solitamente implementate come cache basate sugli indirizzi fisici. Poiché queste cache sono più distanti dal processore e hanno tempi di accesso più lunghi rispetto alla cache L1, il loro impatto sulla gestione dei processi e sulla condivisione dei dati è minore. Di conseguenza, la cache basata sugli indirizzi fisici può semplificare la gestione della cache senza la necessità di utilizzare gli ASID.
+
+Nella cache della memoria virtuale basata sugli indirizzi virtuali, il sistema operativo si occupa della gestione della coerenza tra la cache e la memoria fisica. Questo avviene grazie alla mappatura tra gli indirizzi virtuali e gli indirizzi fisici mantenuta dal sistema operativo.
+Quando un processo scrive dati in una posizione di memoria virtuale, il sistema operativo si assicura che i dati vengano correttamente sincronizzati tra la memoria fisica e la memoria virtuale. Di conseguenza, la cache della memoria virtuale rimane coerente con la memoria fisica senza richiedere l'invalidazione esplicita della cache.
+Gli ASID (Address Space Identifier) vengono utilizzati per distinguere tra i diversi spazi di indirizzamento virtuale dei processi e garantire che la cache della memoria virtuale venga correttamente gestita per ogni processo. Gli ASID consentono al sistema operativo di identificare in modo univoco il contesto di indirizzamento di ciascun processo e di mantenere la coerenza tra la cache e la memoria virtuale durante i cambi di contesto. Pertanto, l'utilizzo degli ASID è fondamentale per garantire un'efficiente gestione della cache della memoria virtuale basata sugli indirizzi virtuali.
+
+Nel caso dell'utilizzo di cache basate sugli indirizzi fisici, non è necessario utilizzare gli ASID perché i dati memorizzati nella cache sono direttamente associati agli indirizzi fisici della memoria fisica, e non agli spazi di indirizzamento virtuali dei processi.
+Quando si utilizza una cache basata sugli indirizzi fisici, la gestione dell'invalidazione e della ricarica della cache viene gestita in base agli indirizzi fisici dei dati, indipendentemente dal processo che li ha generati. Nel caso di una cache basata sugli indirizzi fisici, i dati vengono memorizzati in base agli indirizzi fisici della memoria principale. Durante un context-switch, la tabella delle pagine viene aggiornata per puntare alla tabella delle pagine del nuovo processo, ma la cache non deve essere invalidata poiché i dati fisici rimangono gli stessi.
+In questo caso, non è necessario utilizzare gli ASID per distinguere i dati dei diversi processi, poiché la cache è basata sugli indirizzi fisici, che sono univoci per ogni dato fisico nella memoria.
+
+
+Gli ASID (Address Space Identifiers) sono identificatori univoci associati a ogni processo in esecuzione. Sono utilizzati per distinguere tra diversi contesti di indirizzamento virtuale all'interno del sistema.
+Quando viene utilizzata una cache basata sugli indirizzi virtuali, gli ASID vengono utilizzati per identificare in modo univoco il contesto di indirizzamento virtuale di un processo. Ogni voce nella cache viene etichettata con l'ASID del processo a cui appartiene. In questo modo, quando si verifica un context-switch tra processi, la cache può essere mantenuta intatta e non richiede di essere invalidata. La cache mantiene solo le voci corrispondenti all'ASID del processo in esecuzione, ignorando le voci associate ad altri ASID.
+
+***
+La cache è quella porzione di memoria che ci favorisce un accesso immediato da memoria principale.
+La cache L1, basata su indirizzi virtuali, presenta una maggiore vicinanza al processore, ciò rende il caching immediato, ma la lontananza rispetto alla memoria fisica comporta che dobbiamo attendere la conversione da indirizzo virtuale in fisico, gestito ovviamente dalla MMU, posta tra cache L1 e RAM.
+A ogni cambio di contesto per non invalidare la cache si fa uso degli ASID, che rende possibile la suddivisione degli indirizzi per processo. 
+Cache di L2 e successive, al contrario, si basano su indirizzi fisici, non abbiamo bisogno di convertire l'indirizzo, e al cambio di contesto facciamo riferimento ai dati immediatamente, senza aver bisogno degli ASID. Qui viene a meno il caching a causa della lontananza dalla CPU. 
+
+
+***
+
+La cache basata su indirizzi virtuali è un tipo di cache utilizzato nei sistemi di memoria virtuale, in cui la traduzione degli indirizzi da virtuali a fisici avviene tramite una struttura di traduzione come la Translation Lookaside Buffer (TLB).
+Nel contesto della cache basata su indirizzi virtuali, l'indirizzo utilizzato per effettuare la ricerca nella cache è l'indirizzo virtuale generato dal processore. Questo indirizzo virtuale viene confrontato con i tag presenti nella cache per determinare se i dati richiesti sono già presenti in cache. La cache memorizza quindi copie di blocchi di dati provenienti dalla memoria fisica.
+Quando il processore genera un indirizzo virtuale, il sistema deve prima tradurlo in un indirizzo fisico corrispondente prima di poter effettuare l'accesso alla memoria. La traduzione dell'indirizzo virtuale in un indirizzo fisico viene gestita dalla TLB, che mappa gli indirizzi virtuali negli indirizzi fisici corrispondenti. La TLB è una piccola cache di traduzione che memorizza coppie di indirizzi virtuali e indirizzi fisici per migliorare l'efficienza della traduzione degli indirizzi.
+Quando un'istanza di traduzione manca nella TLB, viene effettuata una chiamata al gestore della memoria virtuale per ottenere la traduzione necessaria. Questo può comportare un'operazione di paginazione, in cui una pagina virtuale viene mappata in una pagina fisica e i dati vengono copiati nella cache. Una volta completata la traduzione, l'indirizzo fisico corrispondente viene utilizzato per eseguire la ricerca nella cache e recuperare i dati richiesti.
+
+La cache basata su indirizzi fisici è un tipo di cache in cui la ricerca dei dati avviene utilizzando direttamente gli indirizzi fisici dei blocchi di memoria anziché gli indirizzi virtuali. A differenza della cache basata su indirizzi virtuali, in cui l'indirizzo virtuale viene tradotto in un indirizzo fisico tramite la TLB, la cache basata su indirizzi fisici non richiede la traduzione degli indirizzi.
+In questo approccio, l'indirizzo fisico generato dal processore viene utilizzato per effettuare la ricerca nella cache. La cache memorizza copie dei blocchi di memoria fisica, e i tag presenti nella cache vengono confrontati direttamente con gli indirizzi fisici per determinare se i dati richiesti sono già presenti in cache.
+
+***
+Nel caso di una cache basata su indirizzi virtuali, la ricerca nella cache viene effettuata utilizzando gli indirizzi virtuali generati dal processore. Gli indirizzi virtuali sono gli indirizzi utilizzati dai programmi in esecuzione e possono essere tradotti in indirizzi fisici tramite la TLB e le tabelle di traduzione degli indirizzi. La cache basata su indirizzi virtuali tiene traccia degli indirizzi virtuali e dei relativi dati memorizzati nella cache.
+D'altra parte, una cache basata su indirizzi fisici esegue la ricerca e l'indicizzazione utilizzando direttamente gli indirizzi fisici generati dalla traduzione degli indirizzi virtuali. In questo caso, la cache tiene traccia degli indirizzi fisici e dei relativi dati memorizzati.
+

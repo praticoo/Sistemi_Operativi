@@ -1,0 +1,37 @@
+Forse il miglior approccio attualmente disponibile per la progettazione dei sistemi
+operativi si basa sull’utilizzo di moduli del kernel caricabili dinamicamente. In
+questo contesto, il kernel è costituito da un insieme di componenti di base, integrati
+poi da funzionalità aggiunte dinamicamente durante l’avvio o l’esecuzione per mezzo
+di moduli. Questa strategia è comune nelle implementazioni moderne di UNIx, come
+Solaris, Linux e Mac oS x, come anche in Windows.
+L’idea di base è che il kernel deve fornire direttamente i servizi principali, mentre
+gli altri servizi sono implementati in modo dinamico, quando il kernel è in esecuzione. Il collegamento dinamico dei servizi è preferibile all’aggiunta di nuove funzionalità direttamente nel kernel, che richiederebbe di ricompilare il kernel ogni volta che si effettua un cambiamento. così, per esempio, si potrebbero includere lo scheduling della cPU e gli algoritmi di gestione della memoria direttamente nel kernel e
+aggiungere il supporto per diversi file system attraverso moduli caricabili.
+Il risultato complessivo ricorda un sistema stratificato, in quanto ogni sezione del
+kernel ha interfacce protette ben definite, ma è più flessibile di un sistema a strati,
+perché ogni modulo può chiamare qualsiasi altro modulo. L’approccio è anche simile
+a quello basato su microkernel per il fatto che il modulo principale ha solo le funzioni
+essenziali e la conoscenza di come caricare altri moduli e comunicare con essi, ma è
+più efficiente, poiché i moduli non devono invocare la funzionalità di trasmissione di messaggi per comunicare.
+La struttura di Solaris, si incentra su un kernel dotato
+dei seguenti sette tipi di moduli caricabili.
+1. classi di scheduling.
+2. File system.
+3. chiamate di sistema caricabili.
+4. Format eseguibili.
+5. Moduli STrEAMS.
+6. varie.
+7. driver dei dispositivi e del bus.
+
+***
+La differenza principale tra l'hypervisor di tipo 1 e l'hypervisor di tipo 2 riguarda il loro posizionamento e il modo in cui interagiscono con il sistema operativo e le macchine virtuali.
+Hypervisor di tipo 1 :
+Posizionamento: L'hypervisor di tipo 1 viene eseguito direttamente sul hardware fisico della macchina host. Non richiede un sistema operativo ospite separato.
+Accesso diretto alle risorse: L'hypervisor di tipo 1 ha un accesso diretto e privilegiato alle risorse hardware del sistema, come CPU, memoria, dispositivi di I/O, ecc.
+Efficienza e prestazioni: Poiché opera direttamente sull'hardware, l'hypervisor di tipo 1 offre generalmente prestazioni migliori e una maggiore efficienza rispetto all'hypervisor di tipo 2.
+Posizionamento: L'hypervisor di tipo 2 viene eseguito come un'applicazione all'interno di un sistema operativo ospite. Richiede un sistema operativo ospite per funzionare.
+Dipendenza dal sistema operativo ospite: L'hypervisor di tipo 2 dipende dal sistema operativo ospite per gestire le risorse hardware. L'hypervisor si colloca come un livello software sopra il sistema operativo ospite.
+Isolamento delle macchine virtuali: Le macchine virtuali create sull'hypervisor di tipo 2 sono isolate all'interno del sistema operativo ospite e condividono le sue risorse.
+Facilità d'uso: L'hypervisor di tipo 2 è generalmente più semplice da installare e configurare, ed è spesso utilizzato su desktop o laptop per eseguire macchine virtuali di prova o sviluppo.
+Esempi: Oracle VirtualBox, VMware Workstation, Parallels Desktop.
+In sintesi, l'hypervisor di tipo 1 è eseguito direttamente sull'hardware fisico e fornisce un accesso diretto alle risorse hardware, offrendo prestazioni e efficienza migliori. L'hypervisor di tipo 2, invece, viene eseguito come un'applicazione all'interno di un sistema operativo ospite e dipende da esso per gestire le risorse hardware. La scelta tra i due tipi dipende dalle esigenze specifiche dell'ambiente di virtualizzazione e dalle risorse hardware disponibili.

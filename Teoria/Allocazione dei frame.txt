@@ -1,0 +1,111 @@
+ALLOCAZIONE DEI FRAME
+Consideriamo ora il problema dell’allocazione. Occorre stabilire un criterio per l’allocazione della memoria libera ai diversi processi. Come esempio, se abbiamo 93 frame liberi e due processi, quanti frame assegnamo a ciascuno?
+Il caso più semplice è un sistema con utente singolo. Si consideri un sistema monoutente che disponga di 128 KB di memoria, con pagine di 1KB. Complessivamente
+sono presenti 128 frame. Il sistema operativo può occupare 35 KB, lasciando 93 frame per il processo utente. In condizioni di paginazione su richiesta pura, tutti i 93 blocchi di memoria sono inizialmente posti nella lista dei frame liberi. Quando comincia l’esecuzione, il processo utente genera una sequenza di page fault. I primi 93 fault ricevono i frame liberi dalla lista. Una volta esaurita quest’ultima, per stabilire quale tra le 93 pagine presenti in memoria si debba sostituire con la novantaquattresima, si può usare un algoritmo di sostituzione delle pagine. Terminato il processo, si reinseriscono i 93 frame nella lista dei frame liberi.
+
+NUMERO MINIMO DI FRAME
+Le strategie di allocazione dei frame sono soggette a parecchi vincoli. Non si possono assegnare più frame di quanti siano disponibili, sempre che non vi sia condivisione di pagine. Inoltre è necessario assegnare almeno un numero minimo di frame. Esaminiamo quest’ultimo requisito in maggiore dettaglio.
+Una delle ragioni per allocare sempre un numero minimo di frame è legata alle
+prestazioni.
+Ovviamente, al decrescere del numero dei frame allocati a ciascun processo aumenta il tasso di page fault, con conseguente rallentamento dell’esecuzione dei processi. 
+Inoltre va ricordato che, quando si verifica un page fault prima che sia stata completata l’esecuzione di un’istruzione, quest’ultima deve essere riavviata. Di conseguenza, i frame disponibili devono essere in numero sufficiente per contenere tutte le pagine cui ogni singola istruzione può far riferimento.
+Si consideri, per esempio, un calcolatore in cui tutte le istruzioni di riferimento alla memoria hanno solo un indirizzo di memoria; in questo caso occorre almeno un frame per l’istruzione e uno per il riferimento alla memoria. Inoltre se è ammesso un indirizzamento indiretto a un livello (come nel caso di un’istruzione load presente nella pagina 16 che può far riferimento a un indirizzo della pagina 0, che costituisce a sua volta un riferimento indiretto alla pagina 23) la paginazione richiede allora almeno tre frame per ogni processo. Si immagini che cosa accadrebbe nel caso di un processo che disponga di due soli frame.
+Il numero minimo di frame è definito dall’architettura del calcolatore. 
+Il caso peggiore si può presentare nelle architetture di calcolatori che permettono riferimenti indiretti a più livelli (per esempio quando ogni parola di 16 bit può contenere un indirizzo di 15 bit più un indicatore indiretto di 1 bit). In teoria, una semplice istruzione di caricamento può far riferimento a un indirizzo indiretto che a sua volta può far riferimento a un indirizzo indiretto (su un’altra pagina) anch’esso facente riferimento a un indirizzo indiretto su un’altra pagina ancora, e così via, finché tutte le pagine della memoria virtuale siano state chiamate in causa. Quindi, nel caso peggiore, tutta la memoria virtuale si deve trovare in memoria fisica. Per superare questa difficoltà occorre porre un limite al livello dei riferimenti indiretti, per esempio limitando un’istruzione a un massimo di 16 livelli. Quando si verifica il riferimento indiretto di primo livello, si imposta un contatore al valore 16, per decrementarlo a ciascun riferimento successivo in questa istruzione. Se il contatore si riduce a 0 si verifica un’eccezione (numero di riferimenti indiretti eccessivo). Tale limite riduce a 17 il numero massimo dei riferimenti alla memoria per ogni istruzione, richiedendo un pari numero di frame. Il numero minimo di frame per ciascun processo è definito dall’architettura, mentre il numero massimo è definito dalla quantità di memoria fisica disponibile. 
+
+ALGORITMI DI ALLOCAZIONE
+Il modo più semplice per suddividere m frame tra n processi è quello per cui a ciascuno si dà una parte uguale, m/n frame (ignorando per ora i frame di cui il sistema operativo ha bisogno). Dati 93 frame e cinque processi, ogni processo riceve 18 frame. I tre frame lasciati liberi si potrebbero usare come buffer di frame liberi. Questo schema è chiamato allocazione uniforme.
+Un’alternativa consiste nel riconoscere che diversi processi hanno bisogno di
+quantità di memoria diverse. Si consideri un sistema con frame di 1 KB. Se un piccolo processo utente di 10 KB e una base di dati interattiva di 127 KB sono gli unici due processi in esecuzione su un sistema con 62 frame liberi, non ha senso allocare a ciascun processo 31 frame. Al processo utente non ne servono più di 10, quindi gli altri 21 sarebbero semplicemente sprecati.
+Per risolvere questo problema è possibile ricorrere all’allocazione proporzionale,
+secondo cui la memoria disponibile si assegna a ciascun processo secondo la propria dimensione. Si supponga che si sia la dimensione della memoria virtuale per il processo
+pi. Si definisce la seguente quantità: S = Sommatoria di si.
+Quindi, se il numero totale dei frame disponibili è m, al processo pi si assegnano ai frame, dove ai è approssimativamente 
+ai = (si /S) * m.
+Naturalmente è necessario scegliere ciascun ai in modo che sia un intero maggiore
+del numero minimo di frame richiesti dall’instruction set e in modo che la somma di tutti gli ai non sia maggiore di m.
+Usando l’allocazione proporzionale, per suddividere 62 frame tra due processi,
+uno di 10 e uno di 127 pagine, si assegnano rispettivamente 4 e 57 frame, infatti:
+10/137 × 62 ≈ 4
+127/137 × 62 ≈ 57.
+In questo modo entrambi i processi condividono i frame disponibili secondo le rispettive necessità, e non in modo uniforme.
+Sia nell’allocazione uniforme sia in quella proporzionale, l’allocazione a ogni processo può variare rispetto al livello di multiprogrammazione. Se tale livello aumenta, ciascun processo perde alcuni frame per fornire la memoria necessaria per il nuovo processo. D’altra parte, se il livello di multiprogrammazione diminuisce, i frame allocati al processo rimosso si possono distribuire tra quelli che restano.
+Occorre notare che sia con l’allocazione uniforme sia con l’allocazione proporzionale, un processo a priorità elevata è trattato come un processo a bassa priorità anche se, per definizione, si vorrebbe che al processo con elevata priorità fosse allocata più
+memoria per accelerarne l’esecuzione, a discapito dei processi a bassa priorità. Un
+soluzione prevede l’uso di uno schema di allocazione proporzionale in cui il rapporto
+dei frame non dipende dalle dimensioni relative dei processi, ma dalle priorità degli
+stessi oppure da una combinazione di dimensioni e priorità.
+
+ALLOCAZIONE GLOBALE E ALLOCAZIONE LOCALE
+Un altro importante fattore che riguarda il modo in cui si assegnano i frame ai vari
+processi è la sostituzione delle pagine. Nei casi in cui vi siano più processi in competizione per i frame, gli algoritmi di sostituzione delle pagine si possono classificare in due categorie generali: sostituzione globale e sostituzione locale. La sostituzione globale permette che per un processo si scelga un frame per la sostituzione dall’insieme di tutti i frame, anche se quel frame è al momento allocato a un altro processo; un processo può dunque sottrarre un frame a un altro processo. 
+La sostituzione locale richiede invece che per ogni processo si scelga un frame solo dal proprio insieme di frame.
+Si consideri per esempio uno schema di allocazione che, per una sostituzione a
+favore dei processi ad alta priorità, permetta di sottrarre frame ai processi a bassa
+priorità. Un processo può scegliere per la sostituzione uno dei suoi frame o uno di
+quelli di qualsiasi processo con priorità minore. Questo metodo permette a un processo ad alta priorità di aumentare il proprio livello di allocazione dei frame a discapito dei processi a bassa priorità.
+Con la strategia di sostituzione locale, il numero di blocchi di memoria assegnati
+a un processo non cambia. Con la sostituzione globale, invece, può accadere che per
+un certo processo si selezionino solo frame allocati ad altri processi, aumentando così
+il numero di frame assegnati a quel processo, purché altri non scelgano per la sostituzione i suoi frame.
+L’algoritmo di sostituzione globale risente di un problema: un processo non può
+controllare il proprio tasso di page fault, infatti l’insieme di pagine che si trova in memoria per un processo non dipende solo dal comportamento di paginazione di quel
+processo, ma anche dal comportamento di paginazione di altri processi. Quindi, lo
+stesso processo può comportarsi in modi molto diversi, per esempio impiegando 0,5 secondi per un’esecuzione e 10,3 secondi per quella successiva, a causa di circostanze
+del tutto esterne. Con l’algoritmo di sostituzione locale questo problema non si presenta. Infatti l’insieme di pagine in memoria per un processo subisce l’effetto del
+comportamento di paginazione di quel solo processo. Tuttavia la sostituzione locale
+può penalizzare un processo, non rendendogli disponibili altre pagine di memoria
+meno usate. Generalmente, la sostituzione globale genera una maggiore produttività
+del sistema, e perciò è il metodo più usato.
+
+THRASHING
+Se il numero dei frame allocati a un processo con priorità bassa diviene inferiore al
+numero minimo richiesto dall’architettura del calcolatore, occorre sospendere l’esecuzione del processo, e quindi togliere le pagine restanti, liberando tutti i frame allocati. 
+Infatti, si consideri un qualsiasi processo che non disponga di un numero di frame
+“sufficiente”. Se non dispone del numero di frame sufficiente per ospitare le pagine
+attive, il processo incorre rapidamente in un page fault. A questo punto si deve sostituire qualche pagina; ma, poiché tutte le sue pagine sono attive, si deve sostituire una
+pagina che sarà subito necessaria, e di conseguenza si verificano parecchi page fault
+poiché si sostituiscono pagine che saranno immediatamente riportate in memoria.
+Questa intensa paginazione è nota come thrashing. Un processo in thrashing spende più tempo per la paginazione che per l’esecuzione dei processi.
+
+CAUSE DEL TRASHING
+Il thrashing causa notevoli problemi di prestazioni. Si consideri il seguente scenario,
+basato sul comportamento effettivo dei primi sistemi di paginazione.
+Il sistema operativo controlla l’utilizzo della CPU. Se questo è basso, aumenta il
+grado di multiprogrammazione introducendo un nuovo processo. Si usa un algoritmo
+di sostituzione delle pagine globale, che sostituisce le pagine senza tener conto del
+processo al quale appartengono.
+Ora si ipotizzi che un processo entri in una nuova fase d’esecuzione e richieda più frame; se ciò si verifica si ha una serie di page fault, cui segue la sottrazione di frame ad altri processi. Questi processi hanno però bisogno di quelle pagine e quindi subiscono anch’essi dei page fault, con conseguente sottrazione di frame ad altri processi. Per effettuare il caricamento e lo scaricamento delle pagine per questi processi si deve usare il dispositivo di paginazione.
+Mentre si mettono i processi in coda per il dispositivo di paginazione, la coda dei processi pronti per l’esecuzione si svuota, quindi l’utilizzo della CPU diminuisce.
+Lo scheduler della CPU rileva questa riduzione dell’utilizzo della CPU e aumenta
+il grado di multiprogrammazione. Si tenta di avviare il nuovo processo sottraendo pagine ai processi in esecuzione, causando ulteriori page fault e allungando la coda per
+il dispositivo di paginazione. Come risultato l’utilizzo della CPU scende ulteriormente,
+e lo scheduler della CPU tenta di aumentare ancora il grado di multiprogrammazione.
+Si è in una situazione di thrashing che fa precipitare la produttività del sistema. Il tasso dei page fault aumenta enormemente, e di conseguenza aumenta il tempo effettivo
+d’accesso alla memoria. I processi non svolgono alcun lavoro, poiché si sta spendendo tutto il tempo nell’attività di paginazione.
+Aumentando il grado di multiprogrammazione aumenta anche l’utilizzo della CPU, anche se più lentamente, fino a raggiungere un massimo. Se a questo punto si aumenta ulteriormente il grado di multiprogrammazione, l’attività di paginazione degenera e fa crollare l’utilizzo della CPU. In questa situazione, per aumentare l’utilizzo della CPU e bloccare il thrashing occorre ridurre il grado di multiprogrammazione. Gli effetti di questa situazione si possono limitare usando un algoritmo di sostituzione locale, o algoritmo di sostituzione per priorità. Con la sostituzione locale, se un processo entra in thrashing, non può sottrarre frame a un altro processo e quindi provocarne a sua volta la degenerazione.Tuttavia il problema non è completamente risolto. I processi in thrashing rimangono nella coda d’attesa del dispositivo di paginazione per la maggior parte del tempo. Il tempo di servizio medio di un page fault aumenta a causa dell’allungamento della coda media d’attesa del dispositivo di paginazione. Di conseguenza, il tempo effettivo d’accesso in memoria aumenta anche per gli altri processi. Per evitare il verificarsi di queste situazioni, occorre fornire a un processo tutti i frame di cui necessita. Per cercare di sapere quanti frame “servano” a un processo si impiegano diverse tecniche.
+
+FREQUENZA DEI PAGE FAULT 
+Il modello del working set ha avuto successo, e la sua conoscenza può servire per la
+prepaginazione, ma appare un modo alquanto goffo per controllare il thrashing. La strategia basata sulla frequenza dei page fault (page fault frequency,
+PFF) è più diretta.
+Il problema specifico è la prevenzione del thrashing. La frequenza dei page fault
+in tale situazione è alta, ed è proprio questa che si deve controllare. Se la frequenza
+è eccessiva, significa che il processo necessita di più frame. Analogamente, se la frequenza dei page fault è molto bassa, il processo potrebbe disporre di troppi frame. Si
+può fissare un limite inferiore e un limite superiore per la frequenza desiderata dei
+page fault. Se la frequenza effettiva dei page fault per un processo oltrepassa il limite superiore, occorre allocare a quel processo un altro frame; se la frequenza scende sotto il limite inferiore, si sottrae un frame a quel processo. Quindi, per prevenire il thrashing, si può misurare e controllare direttamente la frequenza dei page fault.
+Come nel caso della strategia del working set, può essere necessaria lo swapping
+di un processo. Se la frequenza dei page fault aumenta e non ci sono frame disponibili, occorre selezionare un processo e spostarlo sul backing store. I frame liberati si
+distribuiscono ai processi con elevate frequenze di page fault.
+
+****
+Quando si assegna un numero di frame a un processo, è importante considerare le sue "necessità" in termini di utilizzo della memoria. Questo è legato al concetto di "modello di località" e alla strategia di base utilizzata nella gestione della memoria.
+Il modello di località si basa sull'osservazione che i processi tendono a accedere a una piccola porzione della memoria in un dato momento, invece di accedere in modo uniforme a tutte le pagine di memoria. In altre parole, un processo ha la tendenza a concentrare i suoi accessi in specifiche aree di memoria, creando così un'area "località" di riferimento. Questo modello è anche noto come "principio di località".
+Il concetto di località si riferisce alla tendenza di un processo a utilizzare principalmente un insieme ristretto di pagine di memoria durante il suo ciclo di esecuzione. Questo può essere suddiviso in due tipi principali di località:
+Località spaziale: Si verifica quando un processo accede a pagine di memoria fisicamente vicine nel tempo. Ad esempio, durante un'iterazione di un ciclo, un processo potrebbe accedere a pagine consecutive o vicine.
+Località temporale: Si verifica quando un processo accede ripetutamente alla stessa pagina di memoria nel tempo. Ad esempio, un processo potrebbe accedere frequentemente a una particolare pagina contenente variabili di stato o codice di esecuzione.
+La strategia di base nella gestione della memoria è quella di assegnare un numero di frame adeguato alle necessità del processo, tenendo conto del modello di località. L'obiettivo è quello di garantire che le pagine di memoria più frequentemente utilizzate da un processo siano allocate nella memoria fisica per ridurre i tempi di accesso e i page fault.
+Una delle strategie di base è l'algoritmo di sostituzione della pagina, come ad esempio l'algoritmo di sostituzione della pagina Least Recently Used (LRU), che tende a mantenere in memoria le pagine utilizzate di recente e rimuove quelle meno recenti. Questo approccio si basa sulla località temporale, poiché si prevede che le pagine utilizzate di recente saranno richieste nuovamente in futuro.
+Allo stesso modo, l'allocazione di un numero di frame maggiore per le pagine di memoria che formano un'area di località spaziale può migliorare l'efficienza del processo, poiché le pagine contigue vengono accedute più frequentemente insieme.
+In conclusione, assegnare un numero di frame commisurato alle "necessità del processo" implica considerare il modello di località, il concetto di località e utilizzare strategie di gestione della memoria che tengano conto di questi fattori per ottimizzare l'utilizzo della memoria e migliorare le prestazioni del processo.
+ 

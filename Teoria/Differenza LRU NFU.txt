@@ -1,0 +1,14 @@
+Algoritmo LRU (Least Recently Used):
+
+L'algoritmo LRU tiene traccia della temporaneità dell'utilizzo delle pagine.
+Ad ogni accesso ad una pagina, viene aggiornato il suo timestamp di utilizzo con il valore corrente.
+Quando è necessario sostituire una pagina, viene selezionata quella con il timestamp di utilizzo più vecchio, ovvero quella che non è stata utilizzata per il periodo più lungo.
+L'idea alla base di LRU è che le pagine meno utilizzate di recente hanno maggiori probabilità di non essere necessarie nel prossimo futuro, quindi vengono sostituite.
+Algoritmo NFU (Not Frequently Used):
+
+L'algoritmo NFU tiene traccia del numero di volte che una pagina viene utilizzata.
+Ad ogni accesso ad una pagina, viene incrementato il suo contatore di utilizzo.
+Quando è necessario sostituire una pagina, viene selezionata quella con il conteggio di utilizzo più basso.
+L'idea alla base di NFU è che le pagine utilizzate meno frequentemente hanno maggiori probabilità di non essere necessarie nel prossimo futuro, quindi vengono sostituite.
+
+La principale differenza tra LRU e NFU è il criterio di sostituzione utilizzato. LRU si basa sul concetto di "temporaneità", sostituendo la pagina meno recentemente utilizzata, mentre NFU si basa sul concetto di "frequenza", sostituendo la pagina meno frequentemente utilizzata. Di conseguenza, LRU tende a mantenere in memoria le pagine utilizzate di recente, mentre NFU può mantenere in memoria pagine che sono state utilizzate molte volte anche in passato.
